@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#c2590a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="Madan Kirana"/>
+<title>Madan Kirana Store</title>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json"/>
+<meta name="application-name" content="Madan Kirana"/>
+<meta name="description" content="Wholesale Price Calculator for Madan Kirana Store"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800;900&family=Hind:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+<style>
+/* ════════════════════════════════
+   RESET & VARIABLES
+   ════════════════════════════════ */
+:root{
+  --saffron:#c2590a;
+  --saffron-d:#92400e;
+  --saffron-l:#fef3c7;
+  --saffron-ll:#fffbf4;
+  --saffron-b:#f5d799;
+  --saffron-grad:linear-gradient(135deg,#e07b00,#c2590a,#92400e);
+  --green:#16a34a;--green-d:#15803d;--green-l:#dcfce7;
+  --blue:#2563eb;--blue-l:#dbeafe;
+  --red:#dc2626;--red-l:#fee2e2;
+  --purple:#7c3aed;--purple-l:#ede9fe;
+  --pink:#db2777;--pink-l:#fce7f3;
+  --bg:#fdf7ee;
+  --card:#ffffff;
+  --border:#f0d9a0;
+  --text:#1c1917;
+  --muted:#6b7280;
+  --nav-h:64px;
+  --header-h:60px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-top:env(safe-area-inset-top,0px);
+  --radius:16px;--radius-sm:10px;
+  --shadow:0 2px 16px rgba(180,83,9,.12);
+  --shadow-lg:0 8px 32px rgba(180,83,9,.22);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%;overflow:hidden}
+body{
+  font-family:'Hind',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  padding-top:var(--safe-top);
+}
+
+/* ════════════════════════════════
+   HEADER
+   ════════════════════════════════ */
+.app-header{
+  background:var(--saffron-grad);
+  padding:10px 14px;
+  min-height:var(--header-h);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  box-shadow:0 2px 16px rgba(146,64,14,.45);
+  flex-shrink:0;
+  position:relative;
+  z-index:10;
+}
+.hdr-logo{font-size:34px;line-height:1;filter:drop-shadow(0 1px 3px rgba(0,0,0,.3))}
+.hdr-info{flex:1;min-width:0}
+.hdr-name{font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:900;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.25);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-sub{font-size:0.71rem;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-pill{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);color:#fff;padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:700;opacity:0;transition:opacity .4s;flex-shrink:0}
+.hdr-pill.show{opacity:1}
+
+/* ════════════════════════════════
+   SCROLL BODY
+   ════════════════════════════════ */
+.app-body{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  scroll-behavior:smooth;
+  padding-bottom:calc(var(--nav-h) + var(--safe-bottom) + 8px);
+}
+
+/* ════════════════════════════════
+   BOTTOM NAV
+   ════════════════════════════════ */
+.bottom-nav{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  height:calc(var(--nav-h) + var(--safe-bottom));
+  padding-bottom:var(--safe-bottom);
+  background:#fff;
+  border-top:1.5px solid var(--border);
+  display:flex;
+  z-index:50;
+  box-shadow:0 -4px 20px rgba(180,83,9,.12);
+}
+.nav-btn{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  border:none;
+  background:none;
+  cursor:pointer;
+  padding:8px 4px;
+  transition:background .15s;
+  border-radius:0;
+  -webkit-tap-highlight-color:transparent;
+}
+.nav-btn:active{background:var(--saffron-l)}
+.nav-icon{font-size:22px;transition:transform .2s}
+.nav-label{font-family:'Baloo 2',cursive;font-size:0.68rem;font-weight:700;color:var(--muted);transition:color .2s}
+.nav-btn.active .nav-icon{transform:scale(1.15)}
+.nav-btn.active .nav-label{color:var(--saffron)}
+.nav-add-btn{
+  flex:1.1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border:none;
+  background:none;
+  cursor:pointer;
+  padding:0;
+}
+.nav-add-circle{
+  width:52px;height:52px;
+  background:var(--saffron-grad);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.6rem;
+  box-shadow:0 4px 16px rgba(194,89,10,.5);
+  margin-bottom:2px;
+  transition:transform .15s,box-shadow .15s;
+}
+.nav-add-btn:active .nav-add-circle{transform:scale(.93);box-shadow:0 2px 8px rgba(194,89,10,.4)}
+.nav-add-label{font-family:'Baloo 2',cursive;font-size:0.68rem;font-weight:700;color:var(--saffron)}
+
+/* ════════════════════════════════
+   PANES
+   ════════════════════════════════ */
+.pane{display:none}
+.pane.active{display:block}
+
+/* ════════════════════════════════
+   DASHBOARD
+   ════════════════════════════════ */
+.dash-wrap{padding:14px 12px}
+.section-title{font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:800;color:var(--saffron-d);margin:16px 0 10px;display:flex;align-items:center;gap:6px}
+
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+.stat-card{
+  background:var(--card);
+  border-radius:var(--radius-sm);
+  padding:14px 12px;
+  box-shadow:var(--shadow);
+  border:1.5px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+  overflow:hidden;position:relative;
+}
+.stat-card::after{content:'';position:absolute;right:-12px;top:-12px;width:56px;height:56px;border-radius:50%;opacity:.07}
+.sc-amber::after{background:#d97706}.sc-green::after{background:#16a34a}
+.sc-blue::after{background:#2563eb}.sc-purple::after{background:#7c3aed}
+.sc-pink::after{background:#db2777}.sc-red::after{background:#dc2626}
+.stat-ico{font-size:1.5rem;flex-shrink:0}
+.stat-right{min-width:0}
+.stat-val{font-family:'Baloo 2',cursive;font-size:1.25rem;font-weight:900;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat-lbl{font-size:0.72rem;color:var(--muted);margin-top:2px}
+.cv-amber{color:var(--saffron-d)}.cv-green{color:var(--green-d)}.cv-blue{color:var(--blue)}.cv-purple{color:var(--purple)}.cv-pink{color:var(--pink)}.cv-red{color:var(--red)}
+
+/* Item cards in dashboard */
+.item-card{
+  background:var(--card);
+  border-radius:var(--radius-sm);
+  padding:12px;
+  margin-bottom:10px;
+  box-shadow:var(--shadow);
+  border:1.5px solid var(--border);
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.ic-img{width:48px;height:48px;border-radius:8px;object-fit:cover;border:2px solid var(--saffron-b);flex-shrink:0}
+.ic-noimg{width:48px;height:48px;border-radius:8px;background:var(--saffron-l);border:2px solid var(--saffron-b);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.ic-body{flex:1;min-width:0}
+.ic-name{font-family:'Baloo 2',cursive;font-weight:800;font-size:.95rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ic-rates{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.rate-chip{font-size:.7rem;padding:2px 7px;border-radius:8px;font-weight:600;white-space:nowrap}
+.rc-peti{background:var(--saffron-l);color:var(--saffron-d)}
+.rc-set{background:#fef9c3;color:#713f12}
+.rc-pc{background:var(--green-l);color:var(--green-d)}
+.rc-own{background:var(--blue-l);color:var(--blue)}
+.rc-mrp{background:var(--purple-l);color:var(--purple)}
+.ic-margin{flex-shrink:0;text-align:right}
+.margin-pill{display:inline-block;padding:3px 10px;border-radius:12px;font-size:.75rem;font-weight:700}
+.mp-pos{background:var(--green-l);color:var(--green-d)}
+.mp-neg{background:var(--red-l);color:var(--red)}
+.mp-zero{background:var(--saffron-l);color:var(--saffron-d)}
+
+.empty-dash{text-align:center;padding:50px 20px;color:var(--muted);font-size:.9rem}
+.empty-dash .ei{font-size:3rem;margin-bottom:10px}
+
+/* ════════════════════════════════
+   INVENTORY LIST
+   ════════════════════════════════ */
+.inv-top{
+  display:flex;gap:8px;padding:10px 12px;
+  background:#fff;border-bottom:1.5px solid var(--border);
+  position:sticky;top:0;z-index:9;
+}
+.search-inp{
+  flex:1;padding:10px 12px;
+  border:2px solid var(--border);border-radius:var(--radius-sm);
+  font-family:'Hind',sans-serif;font-size:.92rem;
+  background:var(--saffron-ll);outline:none;transition:border .2s;
+}
+.search-inp:focus{border-color:var(--saffron)}
+.csv-btn{
+  background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;
+  border:none;border-radius:var(--radius-sm);padding:0 14px;
+  font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;
+  cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(22,163,74,.3);
+}
+
+.inv-stats-bar{
+  display:flex;gap:14px;padding:6px 14px;
+  font-size:.78rem;color:var(--saffron-d);
+  background:var(--saffron-l);border-bottom:1px solid var(--saffron-b);
+  flex-wrap:wrap;
+}
+
+/* Inventory item card */
+.inv-card{
+  background:var(--card);
+  border-radius:var(--radius-sm);
+  margin:8px 10px;
+  box-shadow:var(--shadow);
+  border:1.5px solid var(--border);
+  overflow:hidden;
+}
+.inv-card-top{display:flex;gap:10px;padding:12px;align-items:flex-start}
+.inv-img-box{position:relative;flex-shrink:0}
+.inv-img{width:54px;height:54px;border-radius:8px;object-fit:cover;border:2px solid var(--saffron-b)}
+.inv-noimg{width:54px;height:54px;border-radius:8px;background:var(--saffron-l);border:2px solid var(--saffron-b);display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.img-change-btn{position:absolute;bottom:-2px;right:-2px;background:var(--saffron-d);border:none;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.65rem;cursor:pointer;color:#fff}
+.img-file-hidden{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.inv-content{flex:1;min-width:0}
+.inv-item-name{font-family:'Baloo 2',cursive;font-weight:800;font-size:1rem;color:var(--text);margin-bottom:6px}
+.inv-chips{display:flex;gap:5px;flex-wrap:wrap}
+
+/* Rate grid inside inv card */
+.inv-rates{
+  background:var(--saffron-ll);
+  border-top:1.5px solid var(--saffron-b);
+  padding:10px 12px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+}
+.rate-box{display:flex;flex-direction:column;gap:2px;align-items:center}
+.rate-box-lbl{font-size:.67rem;color:var(--muted);font-weight:500;text-align:center}
+.rate-box-val{font-family:'Baloo 2',cursive;font-size:.88rem;font-weight:800;text-align:center}
+.rbv-peti{color:var(--saffron-d)}.rbv-set{color:#713f12}.rbv-pc{color:var(--green-d)}
+.rbv-own{color:var(--blue)}.rbv-mrp{color:var(--purple)}.rbv-mg{color:var(--green-d)}
+.rbv-neg{color:var(--red)}
+
+.inv-actions{
+  border-top:1.5px solid var(--saffron-b);
+  display:flex;
+}
+.ia-btn{
+  flex:1;border:none;background:none;padding:10px;
+  font-family:'Baloo 2',cursive;font-size:.8rem;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:background .15s;
+}
+.ia-btn:active{opacity:.7}
+.ia-edit{color:var(--blue);border-right:1px solid var(--saffron-b)}
+.ia-edit:active{background:var(--blue-l)}
+.ia-del{color:var(--red)}
+.ia-del:active{background:var(--red-l)}
+
+.empty-inv{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-inv .ei{font-size:3rem;margin-bottom:10px}
+
+/* ════════════════════════════════
+   BOTTOM SHEET — ADD/EDIT FORM
+   ════════════════════════════════ */
+.sheet-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:200;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s;
+}
+.sheet-overlay.open{opacity:1;pointer-events:all}
+.bottom-sheet{
+  position:fixed;
+  left:0;right:0;bottom:0;
+  max-height:92vh;
+  background:var(--card);
+  border-radius:22px 22px 0 0;
+  box-shadow:0 -8px 40px rgba(0,0,0,.25);
+  z-index:201;
+  transform:translateY(100%);
+  transition:transform .32s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+  padding-bottom:var(--safe-bottom);
+}
+.bottom-sheet.open{transform:translateY(0)}
+.sheet-handle{width:40px;height:4px;background:#e2e8f0;border-radius:2px;margin:10px auto 0;flex-shrink:0}
+.sheet-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px 10px;border-bottom:1.5px solid var(--border);
+  flex-shrink:0;
+}
+.sheet-title{font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;color:var(--saffron-d)}
+.sheet-close{background:none;border:none;font-size:1.3rem;cursor:pointer;padding:4px;color:var(--muted)}
+.sheet-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px;flex:1}
+.sheet-footer{padding:10px 14px;border-top:1.5px solid var(--border);flex-shrink:0}
+
+/* Form fields */
+.fgroup{margin-bottom:13px}
+.fgroup.frow2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fgroup.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.flabel{display:block;font-size:.78rem;font-weight:600;color:var(--saffron-d);margin-bottom:4px}
+.finput{
+  width:100%;padding:11px 12px;
+  border:1.5px solid var(--saffron-b);border-radius:var(--radius-sm);
+  font-family:'Hind',sans-serif;font-size:.95rem;
+  background:var(--saffron-ll);outline:none;
+  transition:border .2s,box-shadow .2s;
+  -webkit-appearance:none;appearance:none;
+}
+.finput:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(194,89,10,.12);background:#fff}
+.finput.f-own{background:#eff6ff;border-color:#bfdbfe}
+.finput.f-own:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.finput.f-mrp{background:#fdf4ff;border-color:#e9d5ff}
+.finput.f-mrp:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+
+/* Photo picker */
+.photo-row{display:flex;gap:10px;align-items:center;margin-bottom:13px}
+.photo-preview-box{width:60px;height:60px;border-radius:10px;border:2px solid var(--saffron-b);overflow:hidden;flex-shrink:0;background:var(--saffron-l);display:flex;align-items:center;justify-content:center;font-size:1.6rem;cursor:pointer;position:relative}
+.photo-preview-box img{width:100%;height:100%;object-fit:cover}
+.photo-file-inp{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.photo-btn{
+  flex:1;padding:12px;
+  border:2px dashed var(--saffron-b);border-radius:var(--radius-sm);
+  background:var(--saffron-ll);
+  font-family:'Hind',sans-serif;font-size:.88rem;color:var(--saffron-d);
+  cursor:pointer;text-align:center;line-height:1.3;
+}
+.photo-btn input{display:none}
+
+/* Live preview bar */
+.live-bar{
+  background:linear-gradient(135deg,#fefce8,#fef3c7);
+  border:1.5px solid #fbbf24;border-radius:var(--radius-sm);
+  padding:10px 12px;margin-top:4px;margin-bottom:10px;
+  display:none;
+}
+.live-bar.show{display:block}
+.lb-title{font-size:.73rem;font-weight:700;color:var(--saffron-d);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.lb-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.lb-item{display:flex;justify-content:space-between;align-items:center;font-size:.84rem;color:#78350f}
+.lb-item strong{font-weight:800}
+
+/* Submit btn */
+.submit-btn{
+  width:100%;padding:14px;
+  background:var(--saffron-grad);color:#fff;
+  border:none;border-radius:var(--radius-sm);
+  font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;
+  cursor:pointer;box-shadow:0 3px 12px rgba(194,89,10,.4);
+  transition:transform .15s,box-shadow .15s;
+  letter-spacing:.3px;
+}
+.submit-btn:active{transform:scale(.98);box-shadow:0 1px 6px rgba(194,89,10,.3)}
+
+/* ════════════════════════════════
+   IMAGE FULLSCREEN MODAL
+   ════════════════════════════════ */
+.img-modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.9);
+  display:none;align-items:center;justify-content:center;
+  z-index:300;flex-direction:column;gap:14px;padding:20px;
+}
+.img-modal.open{display:flex}
+.img-modal img{max-width:100%;max-height:80vh;object-fit:contain;border-radius:12px}
+.img-modal-close{background:#fff;border:none;border-radius:30px;padding:10px 28px;font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:800;cursor:pointer;color:var(--saffron-d)}
+
+/* ════════════════════════════════
+   TOAST
+   ════════════════════════════════ */
+.toast{
+  position:fixed;bottom:calc(var(--nav-h) + 10px + var(--safe-bottom));
+  left:50%;transform:translateX(-50%);
+  background:#1c1917;color:#fff;
+  padding:10px 22px;border-radius:24px;
+  font-size:.84rem;font-weight:600;
+  box-shadow:0 4px 20px rgba(0,0,0,.35);
+  opacity:0;transition:opacity .3s;z-index:400;
+  pointer-events:none;white-space:nowrap;
+  max-width:90vw;text-align:center;
+}
+.toast.show{opacity:1}
+
+/* Install banner */
+.install-banner{
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  padding:10px 14px;display:flex;align-items:center;gap:10px;
+  font-size:.82rem;color:#fff;cursor:pointer;flex-shrink:0;
+}
+.install-banner.hidden{display:none}
+.install-text{flex:1}
+.install-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:5px 12px;border-radius:14px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap}
+
+/* Scrollbar hide */
+.app-body::-webkit-scrollbar,.sheet-body::-webkit-scrollbar{display:none}
+.app-body,.sheet-body{scrollbar-width:none}
+
+/* ════════ ANIMATIONS ════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.pane.active{animation:fadeUp .22s ease}
+.inv-card{animation:fadeUp .18s ease}
+</style>
+</head>
+<body>
+
+<!-- ════ INSTALL BANNER ════ -->
+<div class="install-banner hidden" id="installBanner" onclick="installApp()">
+  <span style="font-size:1.2rem">📲</span>
+  <div class="install-text"><strong>Home Screen par Install karein</strong><br>App jaisi experience ke liye</div>
+  <button class="install-btn">Install</button>
+</div>
+
+<!-- ════ HEADER ════ -->
+<header class="app-header">
+  <div class="hdr-logo">🏪</div>
+  <div class="hdr-info">
+    <div class="hdr-name">Ms. Madan Kirana Store</div>
+    <div class="hdr-sub">Madan Mohan Singhal · 📞 9977642063</div>
+  </div>
+  <div class="hdr-pill" id="savePill">💾 Saved</div>
+</header>
+
+<!-- ════ SCROLLABLE BODY ════ -->
+<div class="app-body" id="appBody">
+
+  <!-- DASHBOARD PANE -->
+  <div class="pane active" id="pane-dash">
+    <div class="dash-wrap">
+      <div class="stats-grid" id="dashStats"></div>
+      <div class="section-title" id="dashItemsTitle">📋 Sabhi Items</div>
+      <div id="dashItems"></div>
+    </div>
+  </div>
+
+  <!-- INVENTORY PANE -->
+  <div class="pane" id="pane-inv">
+    <div class="inv-top">
+      <input class="search-inp" id="searchInp" placeholder="🔍 Item search..." oninput="renderInv()"/>
+      <button class="csv-btn" onclick="downloadCSV()">⬇ CSV</button>
+    </div>
+    <div class="inv-stats-bar" id="invStats" style="display:none">
+      <span>📦 Items: <strong id="totalCnt">0</strong></span>
+      <span>🔍 Dikh rahe: <strong id="shownCnt">0</strong></span>
+      <span>📈 Avg Margin: <strong id="avgMg">—</strong></span>
+    </div>
+    <div id="invList"></div>
+  </div>
+
+</div><!-- /app-body -->
+
+<!-- ════ BOTTOM NAV ════ -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="nav-dash" onclick="switchTab('dash')">
+    <span class="nav-icon">📊</span>
+    <span class="nav-label">Dashboard</span>
+  </button>
+  <button class="nav-add-btn" onclick="openSheet()">
+    <div class="nav-add-circle">＋</div>
+    <span class="nav-add-label">Add</span>
+  </button>
+  <button class="nav-btn" id="nav-inv" onclick="switchTab('inv')">
+    <span class="nav-icon">📦</span>
+    <span class="nav-label">Inventory</span>
+  </button>
+</nav>
+
+<!-- ════ BOTTOM SHEET — FORM ════ -->
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+<div class="bottom-sheet" id="bottomSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <div class="sheet-title" id="sheetTitle">➕ Naya Item</div>
+    <button class="sheet-close" onclick="closeSheet()">✕</button>
+  </div>
+  <div class="sheet-body" id="sheetBody">
+
+    <!-- Photo -->
+    <div class="fgroup">
+      <label class="flabel">📷 Item Ki Photo</label>
+      <div class="photo-row">
+        <div class="photo-preview-box" id="photoBox">
+          <span id="photoIcon">📦</span>
+          <input type="file" accept="image/*" class="photo-file-inp" id="f_img" onchange="onImgPick(event)"/>
+        </div>
+        <label class="photo-btn">
+          📷 Photo upload karein ya camera se lein<br>
+          <small style="color:var(--muted)">(Optional)</small>
+          <input type="file" accept="image/*" id="f_img2" onchange="onImgPick(event)"/>
+        </label>
+      </div>
+      <div id="clearImgWrap" style="display:none">
+        <button onclick="clearImg()" style="font-size:.78rem;background:var(--red-l);border:none;border-radius:6px;padding:4px 10px;color:var(--red);cursor:pointer">✕ Photo Hatao</button>
+      </div>
+    </div>
+
+    <!-- Name -->
+    <div class="fgroup">
+      <label class="flabel">Item Ka Naam *</label>
+      <input class="finput" id="f_name" placeholder="e.g. Lux Soap, Lays Chips..."/>
+    </div>
+
+    <!-- Peti + Unit -->
+    <div class="fgroup frow2">
+      <div>
+        <label class="flabel">Peti/Katta Rate (₹) *</label>
+        <input class="finput" id="f_peti" type="number" placeholder="1000" min="0" step="0.01" oninput="livePreview()"/>
+      </div>
+      <div>
+        <label class="flabel">Unit Ka Naam</label>
+        <input class="finput" id="f_unit" placeholder="Set/Ladi/Dozen" value="Set" oninput="livePreview()"/>
+      </div>
+    </div>
+
+    <!-- Sets + Pcs -->
+    <div class="fgroup frow2">
+      <div>
+        <label class="flabel" id="f_setsLbl">Peti Mein Sets *</label>
+        <input class="finput" id="f_sets" type="number" placeholder="20" min="1" oninput="livePreview()"/>
+      </div>
+      <div>
+        <label class="flabel" id="f_pcsLbl">Har Set Mein Pieces *</label>
+        <input class="finput" id="f_pcs" type="number" placeholder="5" min="1" oninput="livePreview()"/>
+      </div>
+    </div>
+
+    <!-- Piece label + Own + MRP -->
+    <div class="fgroup frow3">
+      <div>
+        <label class="flabel">Piece Ka Naam</label>
+        <input class="finput" id="f_pclbl" placeholder="Piece" value="Piece" oninput="livePreview()"/>
+      </div>
+      <div>
+        <label class="flabel">Own Price (₹)</label>
+        <input class="finput f-own" id="f_own" type="number" placeholder="20" min="0" step="0.01" oninput="livePreview()"/>
+      </div>
+      <div>
+        <label class="flabel">MRP (₹)</label>
+        <input class="finput f-mrp" id="f_mrp" type="number" placeholder="25" min="0" step="0.01" oninput="livePreview()"/>
+      </div>
+    </div>
+
+    <!-- Live Preview -->
+    <div class="live-bar" id="liveBar">
+      <div class="lb-title">📊 Live Preview</div>
+      <div class="lb-grid" id="liveGrid"></div>
+    </div>
+
+  </div>
+  <div class="sheet-footer">
+    <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">✅ Item Save Karein</button>
+  </div>
+</div>
+
+<!-- ════ IMAGE MODAL ════ -->
+<div class="img-modal" id="imgModal" onclick="closeImgModal()">
+  <img id="imgModalSrc" src="" alt=""/>
+  <button class="img-modal-close">✕ Band Karein</button>
+</div>
+
+<!-- ════ TOAST ════ -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════
+// DATA
+// ═══════════════════════════════
+const SK = 'madan-kirana-mobile-v1';
+let items = [], editId = null, formImg = null;
+let deferredPrompt = null;
+
+function load() {
+  try { const r = localStorage.getItem(SK); if(r) items = JSON.parse(r); if(!Array.isArray(items)) items=[]; } catch(e){items=[];}
+}
+function save() {
+  try {
+    localStorage.setItem(SK, JSON.stringify(items));
+    const p = document.getElementById('savePill');
+    p.classList.add('show'); clearTimeout(p._t);
+    p._t = setTimeout(()=>p.classList.remove('show'), 2200);
+  } catch(e) {
+    if(e.name==='QuotaExceededError') toast('⚠️ Storage full! Kuch photos hatayein.','red');
+  }
+}
+
+// ═══════════════════════════════
+// MATH
+// ═══════════════════════════════
+function calc(peti,sets,pcs){
+  const p=+peti||0,s=+sets||1,c=+pcs||1;
+  return {setRate:s>0?p/s:0, pcRate:s>0&&c>0?p/(s*c):0};
+}
+function f2(v){return v!=null&&!isNaN(v)?'₹'+Number(v).toFixed(2):'—';}
+function getMargin(it){if(!it.own||!it.pcRate)return null;return +it.own - it.pcRate;}
+function getMarginPct(it){const m=getMargin(it);if(m===null||it.pcRate===0)return null;return m/it.pcRate*100;}
+
+// ═══════════════════════════════
+// TABS
+// ═══════════════════════════════
+let curTab='dash';
+function switchTab(t) {
+  curTab=t;
+  ['dash','inv'].forEach(id=>{
+    document.getElementById('pane-'+id).classList.toggle('active',id===t);
+    const nb=document.getElementById('nav-'+id);
+    if(nb) nb.classList.toggle('active',id===t);
+  });
+  document.getElementById('appBody').scrollTop=0;
+  if(t==='dash') renderDash();
+  if(t==='inv') renderInv();
+}
+
+// ═══════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════
+function renderDash() {
+  const total=items.length, withPhoto=items.filter(i=>i.img).length;
+  const withOwn=items.filter(i=>i.own).length;
+  const totalVal=items.reduce((s,i)=>s+(+i.peti||0),0);
+  const margins=items.filter(i=>i.own&&i.pcRate).map(i=>getMarginPct(i)).filter(v=>v!==null);
+  const avgM=margins.length?margins.reduce((a,b)=>a+b,0)/margins.length:null;
+
+  document.getElementById('dashStats').innerHTML = `
+    <div class="stat-card sc-amber"><span class="stat-ico">📦</span><div class="stat-right"><div class="stat-val cv-amber">${total}</div><div class="stat-lbl">Kul Items</div></div></div>
+    <div class="stat-card sc-green"><span class="stat-ico">💰</span><div class="stat-right"><div class="stat-val cv-green" style="font-size:1rem">₹${totalVal.toLocaleString('en-IN')}</div><div class="stat-lbl">Total Peti Value</div></div></div>
+    <div class="stat-card sc-blue"><span class="stat-ico">🏷️</span><div class="stat-right"><div class="stat-val cv-blue">${withOwn}</div><div class="stat-lbl">Own Price Set</div></div></div>
+    <div class="stat-card sc-pink"><span class="stat-ico">📷</span><div class="stat-right"><div class="stat-val cv-pink">${withPhoto}</div><div class="stat-lbl">Photos</div></div></div>
+    <div class="stat-card sc-purple"><span class="stat-ico">📈</span><div class="stat-right"><div class="stat-val cv-purple" style="font-size:${avgM!==null?'1.1rem':'1.3rem'}">${avgM!==null?avgM.toFixed(1)+'%':'—'}</div><div class="stat-lbl">Avg Margin</div></div></div>
+    <div class="stat-card sc-red"><span class="stat-ico">⚠️</span><div class="stat-right"><div class="stat-val cv-red">${margins.filter(v=>v<0).length}</div><div class="stat-lbl">Loss Items</div></div></div>
+  `;
+
+  const title=document.getElementById('dashItemsTitle');
+  const container=document.getElementById('dashItems');
+  if(!total){
+    title.style.display='none';
+    container.innerHTML='<div class="empty-dash"><div class="ei">📦</div>Koi item nahi hai.<br>Niche "＋" button se add karein.</div>';
+    return;
+  }
+  title.style.display='flex';
+  const sorted=[...items].sort((a,b)=>{
+    const ma=getMarginPct(a)||0,mb=getMarginPct(b)||0;return mb-ma;
+  });
+  container.innerHTML = sorted.map(it=>{
+    const mp=getMarginPct(it);
+    let mBadge='';
+    if(mp!==null){
+      const cls=mp>0?'mp-pos':mp<0?'mp-neg':'mp-zero';
+      mBadge=`<div class="margin-pill ${cls}">${mp>0?'▲':'▼'} ${Math.abs(mp).toFixed(1)}%</div>`;
+    }
+    const imgEl=it.img?`<img class="ic-img" src="${it.img}" alt="" onclick="openImgModal('${it.id}')"/>`:`<div class="ic-noimg">📦</div>`;
+    return `<div class="item-card">
+      ${imgEl}
+      <div class="ic-body">
+        <div class="ic-name">${esc(it.name)}</div>
+        <div class="ic-rates">
+          <span class="rate-chip rc-peti">Peti: ${f2(it.peti)}</span>
+          <span class="rate-chip rc-set">${esc(it.unitLabel||'Set')}: ${f2(it.setRate)}</span>
+          <span class="rate-chip rc-pc">Piece: ${f2(it.pcRate)}</span>
+          ${it.own?`<span class="rate-chip rc-own">Own: ${f2(it.own)}</span>`:''}
+          ${it.mrp?`<span class="rate-chip rc-mrp">MRP: ${f2(it.mrp)}</span>`:''}
+        </div>
+      </div>
+      <div class="ic-margin">${mBadge}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════
+// INVENTORY
+// ═══════════════════════════════
+function renderInv() {
+  const q=(document.getElementById('searchInp').value||'').toLowerCase();
+  const filtered=items.filter(i=>i.name.toLowerCase().includes(q));
+  const invStats=document.getElementById('invStats');
+  invStats.style.display=items.length?'flex':'none';
+  document.getElementById('totalCnt').textContent=items.length;
+  document.getElementById('shownCnt').textContent=filtered.length;
+  const margins=items.filter(i=>i.own&&i.pcRate).map(i=>getMarginPct(i)).filter(v=>v!==null);
+  document.getElementById('avgMg').textContent=margins.length?(margins.reduce((a,b)=>a+b,0)/margins.length).toFixed(1)+'%':'—';
+
+  const list=document.getElementById('invList');
+  if(!filtered.length){
+    list.innerHTML=`<div class="empty-inv"><div class="ei">${items.length?'🔍':'📦'}</div>${items.length?'Koi item nahi mila.':'Abhi koi item nahi hai.<br>"＋" dabayein add karne ke liye.'}</div>`;
+    return;
+  }
+  list.innerHTML=filtered.map(it=>{
+    const m=getMargin(it),mp=getMarginPct(it);
+    const imgBox=it.img
+      ?`<img class="inv-img" src="${it.img}" alt="" onclick="openImgModal('${it.id}')"/>`
+      :`<div class="inv-noimg">📦</div>`;
+    const mgClass=mp!=null?(mp>0?'rbv-mg':mp<0?'rbv-neg':''):'';
+    return `<div class="inv-card">
+      <div class="inv-card-top">
+        <div class="inv-img-box" style="position:relative">
+          ${imgBox}
+          <label class="img-change-btn" title="Photo badlein">📷<input type="file" accept="image/*" class="img-file-hidden" onchange="inlineImgChg('${it.id}',event)"/></label>
+        </div>
+        <div class="inv-content">
+          <div class="inv-item-name">${esc(it.name)}</div>
+          <div class="inv-chips">
+            <span class="rate-chip rc-peti">📦 Peti: ${it.sets}×${it.pcs}pcs</span>
+            ${it.unitLabel&&it.unitLabel!=='Set'?`<span class="rate-chip rc-set">${esc(it.unitLabel)}</span>`:''}
+          </div>
+        </div>
+      </div>
+      <div class="inv-rates">
+        <div class="rate-box"><div class="rate-box-lbl">Peti Rate</div><div class="rate-box-val rbv-peti">${f2(it.peti)}</div></div>
+        <div class="rate-box"><div class="rate-box-lbl">1 ${esc(it.unitLabel||'Set')}</div><div class="rate-box-val rbv-set">${f2(it.setRate)}</div></div>
+        <div class="rate-box"><div class="rate-box-lbl">1 ${esc(it.pcLabel||'Piece')}</div><div class="rate-box-val rbv-pc">${f2(it.pcRate)}</div></div>
+        ${it.own?`<div class="rate-box"><div class="rate-box-lbl">Own Price</div><div class="rate-box-val rbv-own">${f2(it.own)}</div></div>`:'<div class="rate-box"><div class="rate-box-lbl">Own Price</div><div class="rate-box-val" style="color:var(--muted)">—</div></div>'}
+        ${it.mrp?`<div class="rate-box"><div class="rate-box-lbl">MRP</div><div class="rate-box-val rbv-mrp">${f2(it.mrp)}</div></div>`:'<div class="rate-box"><div class="rate-box-lbl">MRP</div><div class="rate-box-val" style="color:var(--muted)">—</div></div>'}
+        <div class="rate-box"><div class="rate-box-lbl">Margin/Pc</div><div class="rate-box-val ${mgClass}">${m!=null?f2(m)+' ('+(mp.toFixed(1))+'%)':'—'}</div></div>
+      </div>
+      <div class="inv-actions">
+        <button class="ia-btn ia-edit" onclick="startEdit('${it.id}')">✏️ Edit</button>
+        <button class="ia-btn ia-del" onclick="delItem('${it.id}')">🗑️ Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════
+// BOTTOM SHEET
+// ═══════════════════════════════
+function openSheet(editItem){
+  if(editItem){
+    editId=editItem.id;
+    gv('f_name').value=editItem.name||'';
+    gv('f_peti').value=editItem.peti||'';
+    gv('f_unit').value=editItem.unitLabel||'Set';
+    gv('f_sets').value=editItem.sets||'';
+    gv('f_pcs').value=editItem.pcs||'';
+    gv('f_pclbl').value=editItem.pcLabel||'Piece';
+    gv('f_own').value=editItem.own||'';
+    gv('f_mrp').value=editItem.mrp||'';
+    formImg=editItem.img||null;
+    setPhotoPreview(formImg);
+    document.getElementById('sheetTitle').textContent='✏️ Item Edit Karein';
+    document.getElementById('submitBtn').textContent='✅ Update Karein';
+  } else {
+    editId=null; formImg=null;
+    ['f_name','f_peti','f_sets','f_pcs','f_own','f_mrp'].forEach(id=>gv(id).value='');
+    gv('f_unit').value='Set'; gv('f_pclbl').value='Piece';
+    gv('f_img').value=''; gv('f_img2').value='';
+    setPhotoPreview(null);
+    document.getElementById('sheetTitle').textContent='➕ Naya Item';
+    document.getElementById('submitBtn').textContent='✅ Item Save Karein';
+  }
+  document.getElementById('liveBar').classList.remove('show');
+  livePreview();
+  document.getElementById('sheetOverlay').classList.add('open');
+  document.getElementById('bottomSheet').classList.add('open');
+  setTimeout(()=>gv('f_name').focus(),400);
+}
+function closeSheet(){
+  document.getElementById('sheetOverlay').classList.remove('open');
+  document.getElementById('bottomSheet').classList.remove('open');
+}
+
+function setPhotoPreview(src){
+  const box=document.getElementById('photoBox');
+  const icon=document.getElementById('photoIcon');
+  const cw=document.getElementById('clearImgWrap');
+  if(src){
+    // remove old img if any
+    const old=box.querySelector('img');if(old)old.remove();
+    const img=document.createElement('img');
+    img.src=src;img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px';
+    icon.style.display='none';box.appendChild(img);
+    cw.style.display='block';
+  } else {
+    const old=box.querySelector('img');if(old)old.remove();
+    icon.style.display='block';cw.style.display='none';
+  }
+}
+
+function onImgPick(e){
+  const f=e.target.files[0];if(!f)return;
+  // Compress image before storing
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      const MAX=600;
+      let w=img.width,h=img.height;
+      if(w>h&&w>MAX){h=h*MAX/w;w=MAX;}
+      else if(h>MAX){w=w*MAX/h;h=MAX;}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      formImg=canvas.toDataURL('image/jpeg',0.78);
+      setPhotoPreview(formImg);
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(f);
+}
+function clearImg(){formImg=null;setPhotoPreview(null);gv('f_img').value='';gv('f_img2').value='';}
+
+function livePreview(){
+  const peti=gv('f_peti').value,sets=gv('f_sets').value,pcs=gv('f_pcs').value;
+  const uL=gv('f_unit').value||'Set',pcL=gv('f_pclbl').value||'Piece';
+  const own=gv('f_own').value,mrp=gv('f_mrp').value;
+  document.getElementById('f_setsLbl').textContent=`Peti Mein ${uL} *`;
+  document.getElementById('f_pcsLbl').textContent=`Har ${uL} Mein Pcs *`;
+  const bar=document.getElementById('liveBar');
+  if(!peti||!sets||!pcs){bar.classList.remove('show');return;}
+  const {setRate,pcRate}=calc(peti,sets,pcs);
+  const m=own?+own-pcRate:null,mp=m&&pcRate?m/pcRate*100:null;
+  const mColor=mp!=null?(mp>0?'var(--green-d)':mp<0?'var(--red)':'var(--muted)'):'var(--muted)';
+  document.getElementById('liveGrid').innerHTML=`
+    <div class="lb-item"><span>1 Peti:</span><strong>${f2(peti)}</strong></div>
+    <div class="lb-item"><span>1 ${esc(uL)}:</span><strong>${f2(setRate)}</strong></div>
+    <div class="lb-item"><span>1 ${esc(pcL)}:</span><strong>${f2(pcRate)}</strong></div>
+    ${own?`<div class="lb-item"><span>Own:</span><strong style="color:var(--blue)">${f2(own)}</strong></div>`:'<div></div>'}
+    ${mrp?`<div class="lb-item"><span>MRP:</span><strong style="color:var(--purple)">${f2(mrp)}</strong></div>`:'<div></div>'}
+    ${m!=null?`<div class="lb-item"><span>Margin:</span><strong style="color:${mColor}">${f2(m)} (${mp.toFixed(1)}%)</strong></div>`:'<div></div>'}
+  `;
+  bar.classList.add('show');
+}
+
+function handleSubmit(){
+  const name=gv('f_name').value.trim();
+  const peti=gv('f_peti').value,sets=gv('f_sets').value,pcs=gv('f_pcs').value;
+  if(!name||!peti||!sets||!pcs){toast('⚠️ Naam, Peti Rate, Sets aur Pieces zaroori hain!','red');return;}
+  const {setRate,pcRate}=calc(peti,sets,pcs);
+  const own=gv('f_own').value, mrp=gv('f_mrp').value;
+  const entry={
+    id:editId||Date.now().toString(),
+    name,img:formImg||null,
+    peti:+peti,unitLabel:gv('f_unit').value||'Set',
+    sets:+sets,pcs:+pcs,pcLabel:gv('f_pclbl').value||'Piece',
+    setRate,pcRate,
+    own:own?+own:null,mrp:mrp?+mrp:null
+  };
+  if(editId) items=items.map(i=>i.id===editId?entry:i);
+  else items.push(entry);
+  save(); closeSheet();
+  if(curTab==='dash') renderDash(); else renderInv();
+  toast(editId?'✅ Item update ho gaya!':'✅ Item add ho gaya!');
+}
+
+function startEdit(id){const it=items.find(i=>i.id===id);if(it)openSheet(it);}
+
+function delItem(id){
+  if(!confirm('Kya aap is item ko delete karna chahte hain?'))return;
+  items=items.filter(i=>i.id!==id);
+  save();renderInv();renderDash();
+  toast('🗑️ Item delete ho gaya.');
+}
+
+function inlineImgChg(id,e){
+  const f=e.target.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      const MAX=600;let w=img.width,h=img.height;
+      if(w>h&&w>MAX){h=h*MAX/w;w=MAX;}else if(h>MAX){w=w*MAX/h;h=MAX;}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      items=items.map(it=>it.id===id?{...it,img:canvas.toDataURL('image/jpeg',.78)}:it);
+      save();renderInv();
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(f);
+}
+
+// ═══════════════════════════════
+// IMAGE MODAL
+// ═══════════════════════════════
+function openImgModal(id){
+  const it=items.find(i=>i.id===id);
+  if(!it||!it.img)return;
+  document.getElementById('imgModalSrc').src=it.img;
+  document.getElementById('imgModal').classList.add('open');
+}
+function closeImgModal(){document.getElementById('imgModal').classList.remove('open');}
+
+// ═══════════════════════════════
+// CSV
+// ═══════════════════════════════
+function downloadCSV(){
+  if(!items.length){toast('⚠️ Koi item nahi hai!','red');return;}
+  const H=['#','Item','Peti Rate','Unit','Sets','Pieces','Piece Label','Set Rate','Piece Rate','Own Price','MRP','Margin/Pc','Margin%'];
+  const rows=items.map((it,i)=>{
+    const m=getMargin(it),mp=getMarginPct(it);
+    return [i+1,`"${(it.name||'').replace(/"/g,'""')}"`,it.peti||'',
+      `"${(it.unitLabel||'Set').replace(/"/g,'""')}"`,it.sets||'',it.pcs||'',
+      `"${(it.pcLabel||'Piece').replace(/"/g,'""')}"`,
+      it.setRate!=null?it.setRate.toFixed(2):'',it.pcRate!=null?it.pcRate.toFixed(2):'',
+      it.own!=null?it.own:'',it.mrp!=null?it.mrp:'',
+      m!=null?m.toFixed(2):'',mp!=null?mp.toFixed(2)+'%':''
+    ].join(',');
+  });
+  const csv=[H.join(','),...rows].join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;
+  const d=new Date();
+  a.download=`Madan_Kirana_${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}.csv`;
+  a.click();URL.revokeObjectURL(url);
+  toast('✅ CSV download ho rahi hai!');
+}
+
+// ═══════════════════════════════
+// PWA INSTALL
+// ═══════════════════════════════
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();deferredPrompt=e;
+  document.getElementById('installBanner').classList.remove('hidden');
+});
+function installApp(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(r=>{
+    if(r.outcome==='accepted') document.getElementById('installBanner').classList.add('hidden');
+    deferredPrompt=null;
+  });
+}
+window.addEventListener('appinstalled',()=>{
+  document.getElementById('installBanner').classList.add('hidden');
+  toast('✅ App install ho gayi! Home screen par dekhen.');
+});
+
+// ═══════════════════════════════
+// HELPERS
+// ═══════════════════════════════
+function gv(id){return document.getElementById(id);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function toast(msg,type){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.style.background=type==='red'?'#dc2626':'#1c1917';
+  el.classList.add('show');clearTimeout(el._t);
+  el._t=setTimeout(()=>el.classList.remove('show'),2600);
+}
+
+// ═══════════════════════════════
+// SERVICE WORKER (offline support)
+// ═══════════════════════════════
+if('serviceWorker' in navigator){
+  const swCode=`
+    const CACHE='madan-kirana-sw-v1';
+    const FILES=[self.location.href];
+    self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES))));
+    self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
+    self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));
+  `;
+  const blob=new Blob([swCode],{type:'application/javascript'});
+  const url=URL.createObjectURL(blob);
+  navigator.serviceWorker.register(url).then(()=>console.log('SW registered')).catch(()=>{});
+}
+
+// ═══════════════════════════════
+// BOOT
+// ═══════════════════════════════
+load();
+renderDash();
+renderInv();
+</script>
+</body>
+</html>
